@@ -1,0 +1,77 @@
+buildscript {
+    ext {
+        springBootVersion='1.5.3.RELEASE'
+        lombokVersion = '1.16.18'
+        postgresDriverVersion = '9.4.1211.jre7'
+    }
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath("org.projectlombok:lombok:${lombokVersion}")
+        classpath("org.junit.platform:junit-platform-gradle-plugin:1.0.0")
+    }
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+apply plugin: 'groovy'
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'org.junit.platform.gradle.plugin'
+
+ext.junitPlatformVersion = '1.0.0'
+ext.junitJupiterVersion  = '5.0.0'
+ext.log4jVersion         = '2.6.2'
+
+jar {
+    baseName = 'levonke'
+    version = '1.0.0-SNAPSHOT'
+}
+
+compileTestJava {
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+    options.compilerArgs += '-parameters'
+}
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-starter-data-jpa")
+    compile("org.springframework.boot:spring-boot-starter-data-rest")
+    compile("org.projectlombok:lombok:${lombokVersion}")
+
+    runtime("org.postgresql:postgresql")
+
+    testCompile("org.springframework.boot:spring-boot-starter-test")
+
+    // JUnit Jupiter API and TestEngine implementation
+    testCompile("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")
+    testRuntime("org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}")
+
+    testRuntime("org.apache.logging.log4j:log4j-core:${log4jVersion}")
+    testRuntime("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
+}
+
+junitPlatform {
+    // platformVersion '1.0.0'
+    filters {
+        engines {
+            include 'junit-jupiter'
+        }
+        tags {
+            exclude 'slow'
+        }
+        // includeClassNamePattern '.*Test'
+    }
+    // configurationParameter 'junit.jupiter.conditions.deactivate', '*'
+    // enableStandardTestTask true
+    // reportsDir file('build/test-results/junit-platform') // this is the default
+    logManager 'org.apache.logging.log4j.jul.LogManager'
+}
