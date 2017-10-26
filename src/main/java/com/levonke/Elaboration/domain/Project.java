@@ -1,9 +1,12 @@
 package com.levonke.Elaboration.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Data
 @Entity
@@ -27,5 +30,9 @@ public class Project {
 
 	@Column(name = "projects_team_id")
 	private Integer teamId;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "project")
+	private Collection<Version> versions = new ArrayList<Version>();
 
 }

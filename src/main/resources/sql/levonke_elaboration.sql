@@ -1,2 +1,2 @@
 ﻿CREATE SCHEMA elaboration
-  AUTHORIZATION levonke;
+	AUTHORIZATION levonke;

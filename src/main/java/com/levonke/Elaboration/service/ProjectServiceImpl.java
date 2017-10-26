@@ -4,12 +4,11 @@ import com.levonke.Elaboration.web.model.ProjectResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import javax.persistence.EntityNotFoundException;
 
 import com.levonke.Elaboration.domain.Project;
 import com.levonke.Elaboration.repository.ProjectRepository;
 import com.levonke.Elaboration.web.model.ProjectRequest;
-
-import javax.persistence.EntityNotFoundException;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
