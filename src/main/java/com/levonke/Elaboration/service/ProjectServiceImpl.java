@@ -33,7 +33,6 @@ public class ProjectServiceImpl implements ProjectService {
 			.setName(projectRequest.getName())
 			.setDescription(projectRequest.getDescription())
 			.setWebsite(projectRequest.getWebsite())
-			// TODO: add request to community service
 			.setTeamId(projectRequest.getTeamId());
 		return projectRepository.save(project);
 	}

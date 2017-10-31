@@ -19,16 +19,6 @@ public class Version {
 	@Column(name = "versions_major")
 	private Integer major;
 
-	// TODO: add subverionizing
-//	@Column(name = "versions_minor")
-//	private Integer minor;
-//
-//	@Column(name = "versions_release")
-//	private Integer release;
-//
-//	@Column(name = "versions_build")
-//	private Integer build;
-
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "versions_project_id")
@@ -36,11 +26,5 @@ public class Version {
 
 	@Transient
 	private String number;
-
-//	private String verionToString() {
-//		return new String(major.toString() + "." + minor.toString() + "." + release.toString() + "." + build.toString());
-//	}
-
-
 
 }

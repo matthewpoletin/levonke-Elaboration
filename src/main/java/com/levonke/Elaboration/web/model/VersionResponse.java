@@ -11,10 +11,6 @@ public class VersionResponse {
 	Integer id;
 	Integer major;
 	Project project;
-	// TODO: Add subversonizing
-//	Integer minor;
-//	Integer release;
-//	Integer build;
 
 	public VersionResponse(Version version) {
 		this.id = version.getId();

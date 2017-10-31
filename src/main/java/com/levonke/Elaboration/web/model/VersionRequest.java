@@ -7,9 +7,5 @@ public class VersionRequest {
 
 	Integer major;
 	Integer projectId;
-	// TODO: add subversionizing
-//	Integer minor;
-//	Integer release;
-//	Integer build;
 
 }
