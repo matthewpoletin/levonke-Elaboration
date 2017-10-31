@@ -16,7 +16,7 @@ import com.levonke.Elaboration.web.model.ProjectResponse;
 @RequestMapping(ProjectController.PROJECT_BASE_URI)
 public class ProjectController {
 
-	public static final String PROJECT_BASE_URI = "/projects";
+	public static final String PROJECT_BASE_URI = "/api/elaboration/projects";
 
 	@Autowired
 	ProjectServiceImpl projectService;

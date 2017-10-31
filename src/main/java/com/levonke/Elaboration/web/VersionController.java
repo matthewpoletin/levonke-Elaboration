@@ -17,7 +17,7 @@ import java.util.ArrayList;
 @RequestMapping(VersionController.VERSION_BASE_URI)
 public class VersionController {
 
-	public static final String VERSION_BASE_URI = "/versions";
+	public static final String VERSION_BASE_URI = "/api/elaboration/versions";
 
 	@Autowired
 	VersionServiceImpl versionService;
