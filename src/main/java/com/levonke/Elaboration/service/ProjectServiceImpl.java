@@ -1,14 +1,15 @@
 package com.levonke.Elaboration.service;
 
-import com.levonke.Elaboration.web.model.ProjectResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityNotFoundException;
-
 import com.levonke.Elaboration.domain.Project;
 import com.levonke.Elaboration.repository.ProjectRepository;
 import com.levonke.Elaboration.web.model.ProjectRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import javax.persistence.EntityNotFoundException;
+import java.util.List;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
@@ -22,8 +23,14 @@ public class ProjectServiceImpl implements ProjectService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public Iterable<Project> getProjects() {
-		return projectRepository.findAll();
+	public List<Project> getProjects(Integer page, Integer size) {
+		if (page == null) {
+			page = 0;
+		}
+		if (size == null) {
+			size = 25;
+		}
+		return projectRepository.findAll(new PageRequest(page, size)).getContent();
 	}
 
 	@Override

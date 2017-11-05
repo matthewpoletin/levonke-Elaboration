@@ -5,10 +5,11 @@ import com.levonke.Elaboration.repository.VersionRepository;
 import com.levonke.Elaboration.web.model.VersionRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 
 @Service
 public class VersionServiceImpl implements VersionService {
@@ -22,8 +23,14 @@ public class VersionServiceImpl implements VersionService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public Iterable<Version> getVersions() {
-		return versionRepository.findAll();
+	public List<Version> getVersions(Integer page, Integer size) {
+		if (page == null) {
+			page = 0;
+		}
+		if (size == null) {
+			size = 25;
+		}
+		return versionRepository.findAll(new PageRequest(page, size)).getContent();
 	}
 
 	@Override

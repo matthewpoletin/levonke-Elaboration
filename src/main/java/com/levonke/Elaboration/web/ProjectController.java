@@ -5,7 +5,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import com.levonke.Elaboration.domain.Project;
 import com.levonke.Elaboration.service.ProjectServiceImpl;
@@ -18,14 +19,19 @@ public class ProjectController {
 
 	public static final String PROJECT_BASE_URI = "/api/elaboration/projects";
 
+	private ProjectServiceImpl projectService;
+	
 	@Autowired
-	ProjectServiceImpl projectService;
-
+	public ProjectController(ProjectServiceImpl projectService) {
+		this.projectService = projectService;
+	}
+	
 	@RequestMapping(method = RequestMethod.GET)
-	public ArrayList<ProjectResponse> getProjects() {
-		ArrayList<ProjectResponse> projectResponses = new ArrayList<ProjectResponse>();
-		projectService.getProjects().forEach(project -> projectResponses.add(new ProjectResponse(project)));
-		return projectResponses;
+	public List<ProjectResponse> getProjects(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size) {
+		return projectService.getProjects(page, size)
+			.stream()
+			.map(ProjectResponse::new)
+			.collect(Collectors.toList());
 	}
 
 	@ResponseStatus(HttpStatus.CREATED)

@@ -1,8 +1,8 @@
 package com.levonke.Elaboration.repository;
 
 import com.levonke.Elaboration.domain.Version;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface VersionRepository
-	extends CrudRepository<Version, Integer> {
+	extends JpaRepository<Version, Integer> {
 }
