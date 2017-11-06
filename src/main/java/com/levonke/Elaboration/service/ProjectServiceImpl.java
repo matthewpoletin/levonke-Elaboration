@@ -32,7 +32,11 @@ public class ProjectServiceImpl implements ProjectService {
 		}
 		return projectRepository.findAll(new PageRequest(page, size)).getContent();
 	}
-
+	
+	public List<Project> getProjectsByTeam(Integer teamId, Integer page, Integer size) {
+		return projectRepository.findByTeamId(teamId, new PageRequest(page, size));
+	}
+	
 	@Override
 	@Transactional
 	public Project create(ProjectRequest projectRequest) {

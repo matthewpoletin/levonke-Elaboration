@@ -27,8 +27,14 @@ public class ProjectController {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public List<ProjectResponse> getProjects(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size) {
-		return projectService.getProjects(page, size)
+	public List<ProjectResponse> getProjects(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size, @RequestParam(value = "teamId", required = false) Integer teamId) {
+		if (teamId != null) {
+			return projectService.getProjectsByTeam(teamId, page != null ? page : 0, size != null ? size : 25)
+				.stream()
+				.map(ProjectResponse::new)
+				.collect(Collectors.toList());
+		}
+		return projectService.getProjects(page != null ? page : 0, size != null ? size : 25)
 			.stream()
 			.map(ProjectResponse::new)
 			.collect(Collectors.toList());
