@@ -1,5 +1,10 @@
 package com.levonke.Elaboration.web;
 
+import com.levonke.Elaboration.domain.Project;
+import com.levonke.Elaboration.service.ProjectServiceImpl;
+import com.levonke.Elaboration.web.model.ProjectRequest;
+import com.levonke.Elaboration.web.model.ProjectResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -8,11 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import com.levonke.Elaboration.domain.Project;
-import com.levonke.Elaboration.service.ProjectServiceImpl;
-import com.levonke.Elaboration.web.model.ProjectRequest;
-import com.levonke.Elaboration.web.model.ProjectResponse;
 
 @RestController
 @RequestMapping(ProjectController.projectBaseURI)
