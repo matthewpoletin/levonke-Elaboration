@@ -1,37 +1,40 @@
 buildscript {
     ext {
-        springBootVersion='1.5.3.RELEASE'
+        springBootVersion ='2.0.0.M6'
         lombokVersion = '1.16.18'
-        postgresDriverVersion = '9.4.1211.jre7'
+        junitVersion = '5.0.1'
     }
     repositories {
         mavenCentral()
-        jcenter()
+        maven { url "https://repo.spring.io/snapshot" }
+        maven { url "https://repo.spring.io/milestone" }
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath("org.projectlombok:lombok:${lombokVersion}")
-        classpath("org.junit.platform:junit-platform-gradle-plugin:1.0.0")
+        classpath("org.junit.platform:junit-platform-gradle-plugin:1.0.1")
     }
 }
 
 repositories {
     mavenCentral()
-    jcenter()
+    maven { url "https://repo.spring.io/snapshot" }
+    maven { url "https://repo.spring.io/milestone" }
 }
 
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
 apply plugin: 'org.junit.platform.gradle.plugin'
 
-ext.junitPlatformVersion = '1.0.0'
-ext.junitJupiterVersion  = '5.0.0'
-ext.log4jVersion         = '2.6.2'
+group = 'com.levonke'
+version = '0.0.1'
+sourceCompatibility = 1.8
 
 jar {
-    baseName = 'levonke'
-    version = '1.0.0-SNAPSHOT'
+    baseName = 'levonke-Elaboration'
+    version = '0.0.1'
 }
 
 compileTestJava {
@@ -44,22 +47,23 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-web")
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
     compile("org.springframework.boot:spring-boot-starter-data-rest")
-    compile("org.projectlombok:lombok:${lombokVersion}")
+
+    compileOnly("org.projectlombok:lombok:${lombokVersion}")
 
     runtime("org.postgresql:postgresql")
 
     testCompile("org.springframework.boot:spring-boot-starter-test")
 
-    // JUnit Jupiter API and TestEngine implementation
-    testCompile("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")
-    testRuntime("org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}")
+    // To avoid compiler warnings about @API annotations in JUnit code.
+    compile("org.apiguardian:apiguardian-api:1.0.0")
 
-    testRuntime("org.apache.logging.log4j:log4j-core:${log4jVersion}")
-    testRuntime("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
+    testCompile group: 'org.springframework', name: 'spring-test', version: '5.0.1.RELEASE'
+
+    testCompile("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
+    testRuntime("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
 }
 
 junitPlatform {
-    // platformVersion '1.0.0'
     filters {
         engines {
             include 'junit-jupiter'
@@ -67,10 +71,7 @@ junitPlatform {
         tags {
             exclude 'slow'
         }
-        // includeClassNamePattern '.*Test'
+        includeClassNamePattern '.*Test'
     }
-    // configurationParameter 'junit.jupiter.conditions.deactivate', '*'
-    // enableStandardTestTask true
-    // reportsDir file('build/test-results/junit-platform') // this is the default
-    logManager 'org.apache.logging.log4j.jul.LogManager'
+    reportsDir file('build/test-results/junit-platform')
 }

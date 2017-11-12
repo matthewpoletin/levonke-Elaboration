@@ -1,5 +1,6 @@
 package com.levonke.Elaboration.service;
 
+import com.levonke.Elaboration.domain.Project;
 import com.levonke.Elaboration.domain.Version;
 import com.levonke.Elaboration.repository.VersionRepository;
 import com.levonke.Elaboration.web.model.VersionRequest;
@@ -13,14 +14,17 @@ import java.util.List;
 
 @Service
 public class VersionServiceImpl implements VersionService {
-
+	
 	private final VersionRepository versionRepository;
-
+	
+	private final ProjectServiceImpl projectService;
+	
 	@Autowired
-	public VersionServiceImpl(VersionRepository versionRepository) {
+	public VersionServiceImpl(VersionRepository versionRepository, ProjectServiceImpl projectService) {
 		this.versionRepository = versionRepository;
+		this.projectService = projectService;
 	}
-
+	
 	@Override
 	@Transactional(readOnly = true)
 	public List<Version> getVersions(Integer page, Integer size) {
@@ -30,45 +34,53 @@ public class VersionServiceImpl implements VersionService {
 		if (size == null) {
 			size = 25;
 		}
-		return versionRepository.findAll(new PageRequest(page, size)).getContent();
+		return versionRepository.findAll(PageRequest.of(page, size)).getContent();
 	}
-
+	
 	@Override
 	@Transactional
-	public Version create(VersionRequest versionRequest) {
+	public Version createVersion(VersionRequest versionRequest) {
 		Version version = new Version()
 			.setMajor(versionRequest.getMajor());
-		// TODO: Add finding project by id;
-//		version.setProject(project.getProjectId();
+		versionRepository.save(version);
+		this.setProjectToVersion(version.getId(), versionRequest.getProjectId());
 		return versionRepository.save(version);
 	}
-
+	
 	@Override
 	@Transactional(readOnly = true)
-	public Version read(Integer versionId) {
-		Version version = versionRepository.findOne(versionId);
-		if (version == null) {
-			throw new EntityNotFoundException("Version '{" + versionId + "}' not found");
-		}
-		return version;
+	public Version getVersionById(Integer versionId) {
+		return versionRepository.findById(versionId)
+			.orElseThrow(() -> new EntityNotFoundException("Version '{" + versionId + "}' not found"));
 	}
-
+	
 	@Override
 	@Transactional
-	public Version update(Integer versionId, VersionRequest versionRequest) {
-		Version version = versionRepository.findOne(versionId);
-		if (version == null) {
-			throw new EntityNotFoundException("Version '{" + versionId + "}' not found");
-		}
+	public Version updateVersionById(Integer versionId, VersionRequest versionRequest) {
+		Version version = this.getVersionById(versionId);
 		version.setMajor(versionRequest.getMajor() != null ? versionRequest.getMajor() : version.getMajor());
-		// TODO: Add finding associated project by projectId
+		this.setProjectToVersion(versionId, versionRequest.getProjectId());
 		return versionRepository.save(version);
 	}
 
 	@Override
 	@Transactional
-	public void delete(Integer versionId) {
-		versionRepository.delete(versionId);
+	public void deleteVersionById(Integer versionId) {
+		versionRepository.deleteById(versionId);
 	}
-
+	
+	@Override
+	@Transactional
+	public void setProjectToVersion(Integer versionId, Integer projectId) {
+		Version version = this.getVersionById(versionId);
+		version.setProject(projectService.getProjectById(projectId));
+		versionRepository.save(version);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Project getProjectOfVersion(Integer versionId) {
+		return this.getVersionById(versionId).getProject();
+	}
+	
 }

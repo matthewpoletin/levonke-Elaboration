@@ -1,6 +1,5 @@
 package com.levonke.Elaboration.web.model;
 
-import com.levonke.Elaboration.domain.Project;
 import lombok.Data;
 
 import com.levonke.Elaboration.domain.Version;
@@ -10,12 +9,12 @@ public class VersionResponse {
 
 	Integer id;
 	Integer major;
-	Project project;
+	Integer projectId;
 
 	public VersionResponse(Version version) {
 		this.id = version.getId();
 		this.major = version.getMajor();
-		this.project = version.getProject();
+		this.projectId = version.getProject().getId();
 	}
 
 }
