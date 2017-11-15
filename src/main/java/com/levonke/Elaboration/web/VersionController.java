@@ -3,6 +3,8 @@ package com.levonke.Elaboration.web;
 import com.levonke.Elaboration.domain.Project;
 import com.levonke.Elaboration.domain.Version;
 import com.levonke.Elaboration.service.VersionServiceImpl;
+import com.levonke.Elaboration.web.model.ComponentRequest;
+import com.levonke.Elaboration.web.model.ComponentResponse;
 import com.levonke.Elaboration.web.model.VersionRequest;
 import com.levonke.Elaboration.web.model.VersionResponse;
 
@@ -11,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -67,6 +70,19 @@ public class VersionController {
 	@RequestMapping(value = "/{versionId}/projects", method = RequestMethod.GET)
 	public Project getProjectOfVersion(@PathVariable("versionId") final Integer versionId) {
 		return versionService.getProjectOfVersion(versionId);
+	}
+
+	@ResponseStatus(HttpStatus.CREATED)
+	@RequestMapping(value = "/{versionId}/components", method = RequestMethod.POST)
+	public void addComponentToVersion(@PathVariable("versionId") final Integer versionId, @RequestBody ComponentRequest componentRequest) {
+		versionService.addComponentsToVersion(versionId, componentRequest);
+	}
+	
+	@RequestMapping(value = "/{versionId}/components", method = RequestMethod.GET)
+	public List<ComponentResponse> getComponentsOfVersion(@PathVariable("versionId") final Integer versionId) {
+		List<ComponentResponse> componentResponses = new ArrayList<>();
+		versionService.getComponentsOfVersion(versionId).forEach(uuid -> componentResponses.add(new ComponentResponse(uuid.toString())));
+		return componentResponses;
 	}
 	
 }

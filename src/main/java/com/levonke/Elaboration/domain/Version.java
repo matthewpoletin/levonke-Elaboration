@@ -3,6 +3,8 @@ package com.levonke.Elaboration.domain;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Data
 @Entity
@@ -24,9 +26,17 @@ public class Version {
 	@JoinColumn(name = "versions_project_id")
 	private Project project;
 	
+	@ManyToMany(fetch = FetchType.EAGER/*cascade = {CascadeType.PERSIST, CascadeType.MERGE}*/)
+	@JoinTable(
+			name = "versions_components",
+			joinColumns = @JoinColumn(name = "versions_versions_id", referencedColumnName = "versions_id"),
+			inverseJoinColumns = @JoinColumn(name = "componetns_components_id", referencedColumnName = "components_id")
+	)
+	private Collection<Component> components = new ArrayList<>();
+	
 	// TODO: Add support on subversionizing
 	
-	// TODO: Implement turning versin info into string
+	// TODO: Implement turning version info into string
 //	@Transient
 //	private String number;
 	

@@ -2,9 +2,11 @@ package com.levonke.Elaboration.service;
 
 import com.levonke.Elaboration.domain.Project;
 import com.levonke.Elaboration.domain.Version;
+import com.levonke.Elaboration.web.model.ComponentRequest;
 import com.levonke.Elaboration.web.model.VersionRequest;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface VersionService {
 	List<Version> getVersions(Integer page, Integer size);
@@ -15,4 +17,7 @@ public interface VersionService {
 	
 	void setProjectToVersion(Integer versionId, Integer projectId);
 	Project getProjectOfVersion(Integer versionId);
+	
+	void addComponentsToVersion(Integer versionId, ComponentRequest componentRequest);
+	List<UUID> getComponentsOfVersion(Integer versionId);
 }

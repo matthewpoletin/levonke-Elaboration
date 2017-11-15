@@ -1,8 +1,11 @@
 package com.levonke.Elaboration.service;
 
+import com.levonke.Elaboration.domain.Component;
 import com.levonke.Elaboration.domain.Project;
 import com.levonke.Elaboration.domain.Version;
+import com.levonke.Elaboration.repository.ComponentRepository;
 import com.levonke.Elaboration.repository.VersionRepository;
+import com.levonke.Elaboration.web.model.ComponentRequest;
 import com.levonke.Elaboration.web.model.VersionRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +13,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class VersionServiceImpl implements VersionService {
@@ -19,10 +24,13 @@ public class VersionServiceImpl implements VersionService {
 	
 	private final ProjectServiceImpl projectService;
 	
+	private final ComponentRepository componentRepository;
+	
 	@Autowired
-	public VersionServiceImpl(VersionRepository versionRepository, ProjectServiceImpl projectService) {
+	public VersionServiceImpl(VersionRepository versionRepository, ProjectServiceImpl projectService, ComponentRepository componentRepository) {
 		this.versionRepository = versionRepository;
 		this.projectService = projectService;
+		this.componentRepository = componentRepository;
 	}
 	
 	@Override
@@ -81,6 +89,33 @@ public class VersionServiceImpl implements VersionService {
 	@Transactional(readOnly = true)
 	public Project getProjectOfVersion(Integer versionId) {
 		return this.getVersionById(versionId).getProject();
+	}
+	
+	@Override
+	@Transactional
+	public void addComponentsToVersion(Integer versionId, ComponentRequest componentRequest) {
+		Version version = this.getVersionById(versionId);
+		UUID uuid = UUID.fromString(componentRequest.getUuid());
+		Component existingComponent = this.componentRepository.findComponentByUuid(uuid);
+		if (existingComponent != null) {
+			version.getComponents().add(existingComponent);
+		}
+		else {
+			Component newComponent = new Component()
+				.setUuid(uuid);
+			componentRepository.save(newComponent);
+			version.getComponents().add(newComponent);
+		}
+		versionRepository.save(version);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public List<UUID> getComponentsOfVersion(Integer versionId) {
+		Version version = this.getVersionById(versionId);
+		List<UUID> componentsUuid = new ArrayList<>();
+		version.getComponents().forEach(component -> componentsUuid.add(component.getUuid()));
+		return componentsUuid;
 	}
 	
 }
