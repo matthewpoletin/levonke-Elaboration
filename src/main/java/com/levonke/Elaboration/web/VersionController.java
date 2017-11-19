@@ -45,7 +45,7 @@ public class VersionController {
 		response.addHeader(HttpHeaders.LOCATION, versionBaseURI + "/" + version.getId());
 	}
 	
-	@RequestMapping(value = "/{verionId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{versionId}", method = RequestMethod.GET)
 	public VersionResponse readVersion (@PathVariable("versionId") final Integer versionId) {
 		return new VersionResponse(versionService.getVersionById(versionId));
 	}

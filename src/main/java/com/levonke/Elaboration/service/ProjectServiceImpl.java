@@ -41,8 +41,9 @@ public class ProjectServiceImpl implements ProjectService {
 		Project project = new Project()
 			.setName(projectRequest.getName())
 			.setDescription(projectRequest.getDescription())
-			.setWebsite(projectRequest.getWebsite())
-			.setTeamId(projectRequest.getTeamId());
+			.setWebsite(projectRequest.getWebsite());
+		projectRepository.save(project);
+		this.setTeamToProject(project.getId(), project.getTeamId());
 		return projectRepository.save(project);
 	}
 	
@@ -78,12 +79,10 @@ public class ProjectServiceImpl implements ProjectService {
 	
 	@Override
 	@Transactional
-	public void setTeamToProject(Integer projectId, Integer teamId) {
-		if (teamId != null) {
-			Project project = this.getProjectById(projectId);
-		 	project.setTeamId(teamId);
-			projectRepository.save(project);
-		}
+	public Project setTeamToProject(Integer projectId, Integer teamId) {
+		Project project = this.getProjectById(projectId);
+		project.setTeamId(teamId);
+		return projectRepository.save(project);
 	}
 	
 	@Override

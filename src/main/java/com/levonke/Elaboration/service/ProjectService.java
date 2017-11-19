@@ -14,7 +14,7 @@ public interface ProjectService {
 	
 	List<Project> getProjectsOfTeam(Integer teamId);
 	
-	void setTeamToProject(Integer project, Integer teamId);
+	Project setTeamToProject(Integer project, Integer teamId);
 	Integer getTeamOfProject(Integer projectId, Integer teamId);
 	
 	List<Version> getVersionsOfProject(Integer projectId);
