@@ -40,9 +40,10 @@ public class VersionController {
 	
 	@ResponseStatus(HttpStatus.CREATED)
 	@RequestMapping(method = RequestMethod.POST)
-	public void createVersion(@RequestBody VersionRequest versionRequest, HttpServletResponse response) {
+	public VersionResponse createVersion(@RequestBody VersionRequest versionRequest, HttpServletResponse response) {
 		Version version = versionService.createVersion(versionRequest);
 		response.addHeader(HttpHeaders.LOCATION, versionBaseURI + "/" + version.getId());
+		return new VersionResponse(version);
 	}
 	
 	@RequestMapping(value = "/{versionId}", method = RequestMethod.GET)
