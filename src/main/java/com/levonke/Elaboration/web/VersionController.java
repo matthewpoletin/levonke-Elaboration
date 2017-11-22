@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @RequestMapping(VersionController.versionBaseURI)
 public class VersionController {
 	
-	static final String versionBaseURI = "/api/elaboration/versions";
+	static final String versionBaseURI = "/api/elaboration";
 	
 	private VersionServiceImpl versionService;
 	
@@ -30,7 +30,7 @@ public class VersionController {
 		this.versionService = versionService;
 	}
 	
-	@RequestMapping(method = RequestMethod.GET)
+	@RequestMapping(value = "/versions", method = RequestMethod.GET)
 	public List<VersionResponse> getVersions(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size) {
 		return versionService.getVersions(page, size)
 			.stream()
@@ -39,47 +39,47 @@ public class VersionController {
 	}
 	
 	@ResponseStatus(HttpStatus.CREATED)
-	@RequestMapping(method = RequestMethod.POST)
+	@RequestMapping(value = "/versions", method = RequestMethod.POST)
 	public VersionResponse createVersion(@RequestBody VersionRequest versionRequest, HttpServletResponse response) {
 		Version version = versionService.createVersion(versionRequest);
-		response.addHeader(HttpHeaders.LOCATION, versionBaseURI + "/" + version.getId());
+		response.addHeader(HttpHeaders.LOCATION, versionBaseURI + "/versions/" + version.getId());
 		return new VersionResponse(version);
 	}
 	
-	@RequestMapping(value = "/{versionId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/versions/{versionId}", method = RequestMethod.GET)
 	public VersionResponse readVersion (@PathVariable("versionId") final Integer versionId) {
 		return new VersionResponse(versionService.getVersionById(versionId));
 	}
 	
-	@RequestMapping(value = "/{versionId}", method = RequestMethod.PATCH)
+	@RequestMapping(value = "/versions/{versionId}", method = RequestMethod.PATCH)
 	public VersionResponse updateVersion(@PathVariable("versionId") final Integer versionId, @RequestBody VersionRequest versionRequest) {
 		return new VersionResponse(versionService.updateVersionById(versionId, versionRequest));
 	}
 	
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@RequestMapping(value = "/{versionId}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/versions/{versionId}", method = RequestMethod.DELETE)
 	public void deleteVersion(@PathVariable("versionId") Integer versionId) {
 		versionService.deleteVersionById(versionId);
 	}
 	
 	@ResponseStatus(HttpStatus.CREATED)
-	@RequestMapping(value = "/{projectId}/versions/{versionId}", method = RequestMethod.POST)
+	@RequestMapping(value = "/versions/{projectId}/versions/{versionId}", method = RequestMethod.POST)
 	public void setProjectToVersion(@PathVariable("projectId") final Integer projectId, @PathVariable("versionId") final Integer versionId) {
 		versionService.setProjectToVersion(versionId, projectId);
 	}
 	
-	@RequestMapping(value = "/{versionId}/projects", method = RequestMethod.GET)
+	@RequestMapping(value = "/versions/{versionId}/projects", method = RequestMethod.GET)
 	public Project getProjectOfVersion(@PathVariable("versionId") final Integer versionId) {
 		return versionService.getProjectOfVersion(versionId);
 	}
 
 	@ResponseStatus(HttpStatus.CREATED)
-	@RequestMapping(value = "/{versionId}/components", method = RequestMethod.POST)
+	@RequestMapping(value = "/versions/{versionId}/components", method = RequestMethod.POST)
 	public void addComponentToVersion(@PathVariable("versionId") final Integer versionId, @RequestBody ComponentRequest componentRequest) {
 		versionService.addComponentsToVersion(versionId, componentRequest);
 	}
 	
-	@RequestMapping(value = "/{versionId}/components", method = RequestMethod.GET)
+	@RequestMapping(value = "/versions/{versionId}/components", method = RequestMethod.GET)
 	public List<ComponentResponse> getComponentsOfVersion(@PathVariable("versionId") final Integer versionId) {
 		List<ComponentResponse> componentResponses = new ArrayList<>();
 		versionService.getComponentsOfVersion(versionId).forEach(uuid -> componentResponses.add(new ComponentResponse(uuid.toString())));

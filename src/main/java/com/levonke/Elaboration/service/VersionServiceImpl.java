@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -79,10 +80,12 @@ public class VersionServiceImpl implements VersionService {
 	
 	@Override
 	@Transactional
-	public void setProjectToVersion(Integer versionId, Integer projectId) {
-		Version version = this.getVersionById(versionId);
-		version.setProject(projectService.getProjectById(projectId));
-		versionRepository.save(version);
+	public void setProjectToVersion(Integer versionId, @NotNull Integer projectId) {
+		if (projectId != null) {
+			Version version = this.getVersionById(versionId);
+			version.setProject(projectService.getProjectById(projectId));
+			versionRepository.save(version);
+		}
 	}
 	
 	@Override

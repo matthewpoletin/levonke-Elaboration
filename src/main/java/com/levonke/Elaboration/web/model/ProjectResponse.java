@@ -1,9 +1,12 @@
 package com.levonke.Elaboration.web.model;
 
 import com.levonke.Elaboration.domain.Project;
+
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class ProjectResponse {
 
 	private Integer id;

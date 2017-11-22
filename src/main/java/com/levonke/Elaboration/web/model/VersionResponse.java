@@ -3,10 +3,12 @@ package com.levonke.Elaboration.web.model;
 import com.levonke.Elaboration.domain.Version;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@NoArgsConstructor
 public class VersionResponse {
 
 	Integer id;

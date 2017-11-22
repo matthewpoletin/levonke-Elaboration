@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,10 +80,13 @@ public class ProjectServiceImpl implements ProjectService {
 	
 	@Override
 	@Transactional
-	public Project setTeamToProject(Integer projectId, Integer teamId) {
-		Project project = this.getProjectById(projectId);
-		project.setTeamId(teamId);
-		return projectRepository.save(project);
+	public Project setTeamToProject(Integer projectId, @NotNull Integer teamId) {
+		if (teamId != null) {
+			Project project = this.getProjectById(projectId);
+			project.setTeamId(teamId);
+			return projectRepository.save(project);
+		}
+		else return null;
 	}
 	
 	@Override

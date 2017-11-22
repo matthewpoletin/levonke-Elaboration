@@ -39,7 +39,7 @@ public class ProjectController {
 	@RequestMapping(value = "/projects", method = RequestMethod.POST)
 	public ProjectResponse createProject(@RequestBody ProjectRequest projectRequest, HttpServletResponse response) {
 		Project project = projectService.createProject(projectRequest);
-		response.addHeader(HttpHeaders.LOCATION, projectBaseURI + "/" + project.getId());
+		response.addHeader(HttpHeaders.LOCATION, projectBaseURI + "/projects/" + project.getId());
 		return new ProjectResponse(project);
 	}
 	
