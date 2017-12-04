@@ -114,10 +114,10 @@ class ProjectControllerTest {
 	void createProject() throws Exception {
 		// Arrange
 		Project projectNoId = new Project()
-				.setName("Name")
-				.setDescription("Description")
-				.setWebsite("server.com");
-//				.setTeamId(1);
+			.setName("Name")
+			.setDescription("Description")
+			.setWebsite("server.com");
+//			.setTeamId(1);
 		
 		when(projectRepositoryMock.save(projectNoId)).thenReturn(project);
 		

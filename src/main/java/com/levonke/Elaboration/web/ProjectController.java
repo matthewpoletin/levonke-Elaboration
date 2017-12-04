@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,7 +38,7 @@ public class ProjectController {
 	
 	@ResponseStatus(HttpStatus.CREATED)
 	@RequestMapping(value = "/projects", method = RequestMethod.POST)
-	public ProjectResponse createProject(@RequestBody ProjectRequest projectRequest, HttpServletResponse response) {
+	public ProjectResponse createProject(@Valid @RequestBody ProjectRequest projectRequest, HttpServletResponse response) {
 		Project project = projectService.createProject(projectRequest);
 		response.addHeader(HttpHeaders.LOCATION, projectBaseURI + "/projects/" + project.getId());
 		return new ProjectResponse(project);
@@ -49,7 +50,7 @@ public class ProjectController {
 	}
 
 	@RequestMapping(value = "/projects/{projectId}", method = RequestMethod.PATCH)
-	public ProjectResponse updateProject(@PathVariable("projectId") final Integer projectId, @RequestBody ProjectRequest projectRequest) {
+	public ProjectResponse updateProject(@PathVariable("projectId") final Integer projectId, @Valid @RequestBody ProjectRequest projectRequest) {
 		return new ProjectResponse(projectService.updateProjectById(projectId, projectRequest));
 	}
 	

@@ -13,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,7 +41,7 @@ public class VersionController {
 	
 	@ResponseStatus(HttpStatus.CREATED)
 	@RequestMapping(value = "/versions", method = RequestMethod.POST)
-	public VersionResponse createVersion(@RequestBody VersionRequest versionRequest, HttpServletResponse response) {
+	public VersionResponse createVersion(@Valid @RequestBody VersionRequest versionRequest, HttpServletResponse response) {
 		Version version = versionService.createVersion(versionRequest);
 		response.addHeader(HttpHeaders.LOCATION, versionBaseURI + "/versions/" + version.getId());
 		return new VersionResponse(version);
@@ -52,7 +53,7 @@ public class VersionController {
 	}
 	
 	@RequestMapping(value = "/versions/{versionId}", method = RequestMethod.PATCH)
-	public VersionResponse updateVersion(@PathVariable("versionId") final Integer versionId, @RequestBody VersionRequest versionRequest) {
+	public VersionResponse updateVersion(@PathVariable("versionId") final Integer versionId, @Valid @RequestBody VersionRequest versionRequest) {
 		return new VersionResponse(versionService.updateVersionById(versionId, versionRequest));
 	}
 	
@@ -75,7 +76,7 @@ public class VersionController {
 
 	@ResponseStatus(HttpStatus.CREATED)
 	@RequestMapping(value = "/versions/{versionId}/components", method = RequestMethod.POST)
-	public void addComponentToVersion(@PathVariable("versionId") final Integer versionId, @RequestBody ComponentRequest componentRequest) {
+	public void addComponentToVersion(@PathVariable("versionId") final Integer versionId, @Valid @RequestBody ComponentRequest componentRequest) {
 		versionService.addComponentsToVersion(versionId, componentRequest);
 	}
 	
