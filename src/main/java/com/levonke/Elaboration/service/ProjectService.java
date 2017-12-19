@@ -3,10 +3,12 @@ package com.levonke.Elaboration.service;
 import com.levonke.Elaboration.domain.Project;
 import com.levonke.Elaboration.domain.Version;
 import com.levonke.Elaboration.web.model.ProjectRequest;
+
+import org.springframework.data.domain.Page;
 import java.util.List;
 
 public interface ProjectService {
-	List<Project> getProjects(Integer page, Integer size);
+	Page<Project> getProjects(Integer page, Integer size);
 	Project createProject(ProjectRequest projectRequest);
 	Project getProjectById(Integer projectId);
 	Project updateProjectById(Integer projectId, ProjectRequest projectRequest);

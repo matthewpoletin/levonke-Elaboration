@@ -13,7 +13,7 @@ import java.util.List;
 @RequestMapping(value = TeamController.teamBaseURI)
 public class TeamController {
 	
-	static final String teamBaseURI = "/api/elaboration/teams";
+	static final String teamBaseURI = "/api/elaboration";
 	
 	private final ProjectServiceImpl projectService;
 	
@@ -22,8 +22,8 @@ public class TeamController {
 		this.projectService = projectService;
 	}
 	
-	@RequestMapping(value = "/{teamId}/projects")
-	public List<Integer> GetProjectsOfTeam(@PathVariable(value = "teamId") final Integer teamId) {
+	@RequestMapping(value = "/teams/{teamId}/projects")
+	public List<Integer> getProjectsOfTeam(@PathVariable(value = "teamId") final Integer teamId) {
 		List<Integer> projectsId = new ArrayList<>();
 		projectService.getProjectsOfTeam(teamId).forEach(project -> projectsId.add(project.getId()));
 		return projectsId;

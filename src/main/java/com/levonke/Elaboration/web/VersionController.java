@@ -9,6 +9,7 @@ import com.levonke.Elaboration.web.model.VersionRequest;
 import com.levonke.Elaboration.web.model.VersionResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(VersionController.versionBaseURI)
@@ -32,11 +32,12 @@ public class VersionController {
 	}
 	
 	@RequestMapping(value = "/versions", method = RequestMethod.GET)
-	public List<VersionResponse> getVersions(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size) {
+	public Page<VersionResponse> getVersions(@RequestParam(value = "page", required = false) Integer page,
+											 @RequestParam(value = "size", required = false) Integer size) {
+		page = page != null ? page : 0;
+		size = size != null ? size : 25;
 		return versionService.getVersions(page, size)
-			.stream()
-			.map(VersionResponse::new)
-			.collect(Collectors.toList());
+			.map(VersionResponse::new);
 	}
 	
 	@ResponseStatus(HttpStatus.CREATED)
@@ -53,7 +54,8 @@ public class VersionController {
 	}
 	
 	@RequestMapping(value = "/versions/{versionId}", method = RequestMethod.PATCH)
-	public VersionResponse updateVersion(@PathVariable("versionId") final Integer versionId, @Valid @RequestBody VersionRequest versionRequest) {
+	public VersionResponse updateVersion(@PathVariable("versionId") final Integer versionId,
+										 @Valid @RequestBody VersionRequest versionRequest) {
 		return new VersionResponse(versionService.updateVersionById(versionId, versionRequest));
 	}
 	
@@ -65,7 +67,8 @@ public class VersionController {
 	
 	@ResponseStatus(HttpStatus.CREATED)
 	@RequestMapping(value = "/versions/{projectId}/versions/{versionId}", method = RequestMethod.POST)
-	public void setProjectToVersion(@PathVariable("projectId") final Integer projectId, @PathVariable("versionId") final Integer versionId) {
+	public void setProjectToVersion(@PathVariable("projectId") final Integer projectId,
+									@PathVariable("versionId") final Integer versionId) {
 		versionService.setProjectToVersion(versionId, projectId);
 	}
 	
@@ -76,7 +79,8 @@ public class VersionController {
 
 	@ResponseStatus(HttpStatus.CREATED)
 	@RequestMapping(value = "/versions/{versionId}/components", method = RequestMethod.POST)
-	public void addComponentToVersion(@PathVariable("versionId") final Integer versionId, @Valid @RequestBody ComponentRequest componentRequest) {
+	public void addComponentToVersion(@PathVariable("versionId") final Integer versionId,
+									  @Valid @RequestBody ComponentRequest componentRequest) {
 		versionService.addComponentToVersion(versionId, componentRequest);
 	}
 	

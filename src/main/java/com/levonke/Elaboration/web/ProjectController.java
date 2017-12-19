@@ -6,6 +6,7 @@ import com.levonke.Elaboration.web.model.ProjectRequest;
 import com.levonke.Elaboration.web.model.ProjectResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(ProjectController.projectBaseURI)
@@ -29,11 +29,12 @@ public class ProjectController {
 	}
 	
 	@RequestMapping(value = "/projects", method = RequestMethod.GET)
-	public List<ProjectResponse> getProjects(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size) {
-		return projectService.getProjects(page != null ? page : 0, size != null ? size : 25)
-			.stream()
-			.map(ProjectResponse::new)
-			.collect(Collectors.toList());
+	public Page<ProjectResponse> getProjects(@RequestParam(value = "page", required = false) Integer page,
+											 @RequestParam(value = "size", required = false) Integer size) {
+		page = page != null ? page : 0;
+		size = size != null ? size : 25;
+		return projectService.getProjects(page, size)
+			.map(ProjectResponse::new);
 	}
 	
 	@ResponseStatus(HttpStatus.CREATED)
@@ -50,7 +51,8 @@ public class ProjectController {
 	}
 
 	@RequestMapping(value = "/projects/{projectId}", method = RequestMethod.PATCH)
-	public ProjectResponse updateProject(@PathVariable("projectId") final Integer projectId, @Valid @RequestBody ProjectRequest projectRequest) {
+	public ProjectResponse updateProject(@PathVariable("projectId") final Integer projectId,
+										 @Valid @RequestBody ProjectRequest projectRequest) {
 		return new ProjectResponse(projectService.updateProjectById(projectId, projectRequest));
 	}
 	
@@ -61,12 +63,14 @@ public class ProjectController {
 	}
 	
 	@RequestMapping(value = "/projects/{projectId}/teams/{teamId}", method = RequestMethod.POST)
-	public ProjectResponse setTeamToProject(@PathVariable("projectId") final Integer projectId, @PathVariable("projectId") final Integer teamId) {
+	public ProjectResponse setTeamToProject(@PathVariable("projectId") final Integer projectId,
+											@PathVariable("teamId") final Integer teamId) {
 		return new ProjectResponse(projectService.setTeamToProject(projectId, teamId));
 	}
 	
 	@RequestMapping(value = "/projects/{projectId}/teams/{teamId}", method = RequestMethod.GET)
-	public Integer getTeamOfProject(@PathVariable("projectId") final Integer projectId, @PathVariable("projectId") final Integer teamId) {
+	public Integer getTeamOfProject(@PathVariable("projectId") final Integer projectId,
+									@PathVariable("teamId") final Integer teamId) {
 		return projectService.getTeamOfProject(projectId, teamId);
 	}
 	

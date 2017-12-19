@@ -9,6 +9,7 @@ import com.levonke.Elaboration.web.model.ComponentRequest;
 import com.levonke.Elaboration.web.model.VersionRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,14 +37,8 @@ public class VersionServiceImpl implements VersionService {
 	
 	@Override
 	@Transactional(readOnly = true)
-	public List<Version> getVersions(Integer page, Integer size) {
-		if (page == null) {
-			page = 0;
-		}
-		if (size == null) {
-			size = 25;
-		}
-		return versionRepository.findAll(PageRequest.of(page, size)).getContent();
+	public Page<Version> getVersions(Integer page, Integer size) {
+		return versionRepository.findAll(PageRequest.of(page, size));
 	}
 	
 	@Override
