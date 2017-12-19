@@ -96,7 +96,7 @@ public class VersionServiceImpl implements VersionService {
 	
 	@Override
 	@Transactional
-	public void addComponentsToVersion(Integer versionId, ComponentRequest componentRequest) {
+	public void addComponentToVersion(Integer versionId, ComponentRequest componentRequest) {
 		Version version = this.getVersionById(versionId);
 		UUID uuid = UUID.fromString(componentRequest.getUuid());
 		Component existingComponent = this.componentRepository.findComponentByUuid(uuid);

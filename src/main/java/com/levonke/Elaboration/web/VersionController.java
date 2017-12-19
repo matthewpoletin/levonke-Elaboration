@@ -77,7 +77,7 @@ public class VersionController {
 	@ResponseStatus(HttpStatus.CREATED)
 	@RequestMapping(value = "/versions/{versionId}/components", method = RequestMethod.POST)
 	public void addComponentToVersion(@PathVariable("versionId") final Integer versionId, @Valid @RequestBody ComponentRequest componentRequest) {
-		versionService.addComponentsToVersion(versionId, componentRequest);
+		versionService.addComponentToVersion(versionId, componentRequest);
 	}
 	
 	@RequestMapping(value = "/versions/{versionId}/components", method = RequestMethod.GET)

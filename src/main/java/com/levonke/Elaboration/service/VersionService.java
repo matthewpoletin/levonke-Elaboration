@@ -18,6 +18,6 @@ public interface VersionService {
 	void setProjectToVersion(Integer versionId, Integer projectId);
 	Project getProjectOfVersion(Integer versionId);
 	
-	void addComponentsToVersion(Integer versionId, ComponentRequest componentRequest);
+	void addComponentToVersion(Integer versionId, ComponentRequest componentRequest);
 	List<UUID> getComponentsOfVersion(Integer versionId);
 }
