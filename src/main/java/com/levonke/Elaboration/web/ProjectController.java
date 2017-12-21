@@ -30,10 +30,17 @@ public class ProjectController {
 	
 	@RequestMapping(value = "/projects", method = RequestMethod.GET)
 	public Page<ProjectResponse> getProjects(@RequestParam(value = "page", required = false) Integer page,
-											 @RequestParam(value = "size", required = false) Integer size) {
+											 @RequestParam(value = "size", required = false) Integer size,
+											 @RequestParam(value = "name", required = false) String name) {
 		page = page != null ? page : 0;
 		size = size != null ? size : 25;
-		return projectService.getProjects(page, size)
+		Page<Project> projects;
+		if (name != null) {
+			projects = projectService.getProjectsWithName(name, page, size);
+		} else {
+			projects = projectService.getProjects(page, size);
+		}
+		return projects
 			.map(ProjectResponse::new);
 	}
 	
@@ -46,19 +53,30 @@ public class ProjectController {
 	}
 	
 	@RequestMapping(value = "/projects/{projectId}", method = RequestMethod.GET)
-	public ProjectResponse getProject(@PathVariable("projectId") final Integer projectId) {
+	public ProjectResponse getProjectById(@PathVariable("projectId") final Integer projectId) {
 		return new ProjectResponse(projectService.getProjectById(projectId));
+	}
+	
+	@RequestMapping(value = "/projects/by", method = RequestMethod.GET)
+	public ProjectResponse getProjectBy(@RequestParam(value = "name") String name,
+										HttpServletResponse response) {
+		if (name != null && name.length() > 0) {
+			return new ProjectResponse(projectService.getProjectByName(name));
+		} else {
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			return null;
+		}
 	}
 
 	@RequestMapping(value = "/projects/{projectId}", method = RequestMethod.PATCH)
-	public ProjectResponse updateProject(@PathVariable("projectId") final Integer projectId,
-										 @Valid @RequestBody ProjectRequest projectRequest) {
+	public ProjectResponse updateProjectById(@PathVariable("projectId") final Integer projectId,
+											 @Valid @RequestBody ProjectRequest projectRequest) {
 		return new ProjectResponse(projectService.updateProjectById(projectId, projectRequest));
 	}
 	
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@RequestMapping(value = "/projects/{projectId}", method = RequestMethod.DELETE)
-	public void deleteProject(@PathVariable("projectId") final Integer projectId) {
+	public void deleteProjectById(@PathVariable("projectId") final Integer projectId) {
 		projectService.deleteProjectById(projectId);
 	}
 	

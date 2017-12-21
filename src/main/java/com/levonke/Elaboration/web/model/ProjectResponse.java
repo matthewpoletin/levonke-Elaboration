@@ -11,6 +11,7 @@ public class ProjectResponse {
 
 	private Integer id;
 	private String name;
+	private String officialName;
 	private String description;
 	private String website;
 	private Integer teamId;
@@ -18,6 +19,7 @@ public class ProjectResponse {
 	public ProjectResponse(Project project) {
 		this.id = project.getId();
 		this.name = project.getName();
+		this.officialName = project.getName();
 		this.description = project.getDescription();
 		this.website = project.getWebsite();
 		this.teamId = project.getTeamId();

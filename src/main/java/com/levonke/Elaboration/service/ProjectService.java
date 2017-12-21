@@ -9,8 +9,10 @@ import java.util.List;
 
 public interface ProjectService {
 	Page<Project> getProjects(Integer page, Integer size);
+	Page<Project> getProjectsWithName(String name, Integer page, Integer size);
 	Project createProject(ProjectRequest projectRequest);
 	Project getProjectById(Integer projectId);
+	Project getProjectByName(String name);
 	Project updateProjectById(Integer projectId, ProjectRequest projectRequest);
 	void deleteProjectById(Integer projectId);
 	

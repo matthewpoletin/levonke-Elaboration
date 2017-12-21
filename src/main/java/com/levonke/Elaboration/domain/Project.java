@@ -22,6 +22,9 @@ public class Project {
 	@Column(name = "projects_name")
 	private String name;
 	
+	@Column(name = "projects_official_name")
+	private String officialName;
+	
 	@Column(name = "projects_description")
 	private String description;
 	

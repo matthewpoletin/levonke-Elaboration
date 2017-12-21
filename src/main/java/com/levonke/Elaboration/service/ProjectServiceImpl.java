@@ -32,10 +32,17 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 	
 	@Override
+	@Transactional(readOnly = true)
+	public Page<Project> getProjectsWithName(String name, Integer page, Integer size) {
+		return projectRepository.getProjectsByNameContainingIgnoreCase(name, PageRequest.of(page, size));
+	}
+	
+	@Override
 	@Transactional
 	public Project createProject(ProjectRequest projectRequest) {
 		Project project = new Project()
 			.setName(projectRequest.getName())
+			.setOfficialName(projectRequest.getOfficialName())
 			.setDescription(projectRequest.getDescription())
 			.setWebsite(projectRequest.getWebsite());
 		projectRepository.save(project);
@@ -51,10 +58,17 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 	
 	@Override
+	@Transactional(readOnly = true)
+	public Project getProjectByName(String name) {
+		return projectRepository.getProjectByNameIgnoreCase(name);
+	}
+	
+	@Override
 	@Transactional
 	public Project updateProjectById(Integer projectId, ProjectRequest projectRequest) {
 		Project project = this.getProjectById(projectId);
 		project.setName(projectRequest.getName() != null ? projectRequest.getName() : project.getName());
+		project.setOfficialName(projectRequest.getOfficialName() != null ? projectRequest.getOfficialName() : project.getOfficialName());
 		project.setDescription(projectRequest.getDescription() != null ? projectRequest.getDescription() : project.getDescription());
 		project.setWebsite(projectRequest.getWebsite() != null ? projectRequest.getWebsite() : project.getWebsite());
 		this.setTeamToProject(projectId ,projectRequest.getTeamId());

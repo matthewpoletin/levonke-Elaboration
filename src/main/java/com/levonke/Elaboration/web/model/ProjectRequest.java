@@ -11,6 +11,8 @@ public class ProjectRequest {
 	@NotEmpty(message = "Not valid name")
 	private String name;
 	
+	private String officialName;
+	
 	private String description;
 	
 	private String website;
