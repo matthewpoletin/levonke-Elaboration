@@ -5,6 +5,7 @@ import com.levonke.Elaboration.service.ProjectServiceImpl;
 import com.levonke.Elaboration.web.model.ProjectRequest;
 import com.levonke.Elaboration.web.model.ProjectResponse;
 
+import com.levonke.Elaboration.web.model.VersionResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
@@ -12,8 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping(ProjectController.projectBaseURI)
@@ -93,10 +92,13 @@ public class ProjectController {
 	}
 	
 	@RequestMapping(value = "/projects/{projectId}/versions", method = RequestMethod.GET)
-	public List<Integer> getProjectVersions(@PathVariable("projectId") final Integer projectId) {
-		List<Integer> versionsId = new ArrayList<>();
-		projectService.getVersionsOfProject(projectId).forEach(version -> versionsId.add(version.getId()));
-		return versionsId;
+	public Page<VersionResponse> getProjectVersions(@PathVariable(value = "projectId") final Integer projectId,
+													@RequestParam(value = "page", required = false) Integer page,
+													@RequestParam(value = "size", required = false) Integer size) {
+		page = page != null ? page : 0;
+		size = size != null ? size : 25;
+		return projectService.getVersionsOfProject(projectId, page, size)
+			.map(VersionResponse::new);
 	}
 	
 }

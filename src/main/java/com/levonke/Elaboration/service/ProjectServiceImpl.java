@@ -7,6 +7,7 @@ import com.levonke.Elaboration.web.model.ProjectRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -107,8 +108,9 @@ public class ProjectServiceImpl implements ProjectService {
 	
 	@Override
 	@Transactional(readOnly = true)
-	public List<Version> getVersionsOfProject(Integer projectId) {
-		return new ArrayList(this.getProjectById(projectId).getVersions());
+	public Page<Version> getVersionsOfProject(Integer projectId, Integer page, Integer size) {
+		List<Version> versions = new ArrayList<>(this.getProjectById(projectId).getVersions());
+		return new PageImpl<>(versions, PageRequest.of(page, size), versions.size());
 	}
 
 }

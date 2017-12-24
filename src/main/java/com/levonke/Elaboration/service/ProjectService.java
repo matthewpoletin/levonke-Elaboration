@@ -21,5 +21,5 @@ public interface ProjectService {
 	Project setTeamToProject(Integer project, Integer teamId);
 	Integer getTeamOfProject(Integer projectId, Integer teamId);
 	
-	List<Version> getVersionsOfProject(Integer projectId);
+	Page<Version> getVersionsOfProject(Integer projectId, Integer page, Integer size);
 }
